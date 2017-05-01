@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -40,12 +42,15 @@ public class JKeel
 			throws FileNotFoundException, IOException
 	{
 		final Properties languageProperties = new Properties();
-		languageProperties.load(new FileInputStream(localizationFile));
-		data.put(language, languageProperties);
-
-		if (asDefaultLanguage)
+		try (InputStreamReader reader = new InputStreamReader(new FileInputStream(localizationFile), StandardCharsets.UTF_8))
 		{
-			defaultLanguage = language;
+			languageProperties.load(reader);
+			data.put(language, languageProperties);
+
+			if (asDefaultLanguage)
+			{
+				defaultLanguage = language;
+			}
 		}
 	}
 
