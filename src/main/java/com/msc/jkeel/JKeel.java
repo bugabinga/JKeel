@@ -15,14 +15,24 @@ import javafx.util.Pair;
 
 public class JKeel
 {
+	private static JKeel globalInstance = new JKeel();
+
+	/**
+	 * Returns JKeel's {@link #globalInstance global instance}.
+	 */
+	public JKeel global()
+	{
+		return globalInstance;
+	}
+
 	/**
 	 * Map that holds the properties for each language.
 	 */
-	private static Map<String, Properties>	data			= new HashMap<>();
+	private final Map<String, Properties>	data			= new HashMap<>();
 	/**
 	 * Language that is supposed to be used as the default.
 	 */
-	private static String					defaultLanguage	= null;
+	private String							defaultLanguage	= null;
 
 	/**
 	 * Loads a language and adds it as a default if wanted.
@@ -38,7 +48,7 @@ public class JKeel
 	 * @throws IOException
 	 *             if the language file couldn't be loaded
 	 */
-	private static void loadLanguage(final File localizationFile, final String language, final boolean asDefaultLanguage)
+	private void loadLanguage(final File localizationFile, final String language, final boolean asDefaultLanguage)
 			throws FileNotFoundException, IOException
 	{
 		final Properties languageProperties = new Properties();
@@ -66,7 +76,7 @@ public class JKeel
 	 * @throws IOException
 	 *             if the language file couldn't be loaded
 	 */
-	public static void setLanguage(final File localizationFile, final String language)
+	public void setLanguage(final File localizationFile, final String language)
 			throws FileNotFoundException, IOException
 	{
 		data.clear();
@@ -87,7 +97,7 @@ public class JKeel
 	 * @throws IOException
 	 *             if the language file couldn't be loaded
 	 */
-	public static void addLanguage(final File localizationFile, final String language, final boolean asDefaultLanguage)
+	public void addLanguage(final File localizationFile, final String language, final boolean asDefaultLanguage)
 			throws FileNotFoundException, IOException
 	{
 		loadLanguage(localizationFile, language, asDefaultLanguage);
@@ -100,7 +110,7 @@ public class JKeel
 	 *            to delete
 	 * @return true if it has been deleted, otherwise false (was default)
 	 */
-	public static boolean removeLanguage(final String language)
+	public boolean removeLanguage(final String language)
 	{
 		if (language.equals(defaultLanguage))
 		{
@@ -117,7 +127,7 @@ public class JKeel
 	 *            to set as default
 	 * @return true if the language was set, otherwise false (wasn't loaded)
 	 */
-	public static void setDefaultLanguage(final String language)
+	public void setDefaultLanguage(final String language)
 	{
 		checkLanguage(language);
 		defaultLanguage = language;
@@ -130,7 +140,7 @@ public class JKeel
 	 *            the key of the text
 	 * @return
 	 */
-	public static String getText(final String key)
+	public String getText(final String key)
 	{
 		return getTextOfLanguage(defaultLanguage, key, new String[] {});
 	}
@@ -144,7 +154,7 @@ public class JKeel
 	 *            replacements for the tags
 	 * @return
 	 */
-	public static String getText(final String key, final String... replacements)
+	public String getText(final String key, final String... replacements)
 	{
 		return getTextOfLanguage(defaultLanguage, key, replacements);
 	}
@@ -160,7 +170,7 @@ public class JKeel
 	 *            replacements for the tags
 	 * @return
 	 */
-	public static String getTextOfLanguage(final String language, final String key, final String... replacements)
+	public String getTextOfLanguage(final String language, final String key, final String... replacements)
 	{
 		checkLanguage(language);
 		String string = data.get(language).getProperty(key);
@@ -190,8 +200,7 @@ public class JKeel
 	 *            tags that should be replaced including their replacementtext
 	 * @return the text with replaced tags
 	 */
-	@SafeVarargs
-	public static String getText(final String key, final Pair<String, String>... tagAndReplacement)
+	public String getText(final String key, final Pair<String, String>... tagAndReplacement)
 	{
 		return getTextOfLanguage(defaultLanguage, key, tagAndReplacement);
 	}
@@ -205,8 +214,7 @@ public class JKeel
 	 *            tags that should be replaced including their replacementtext
 	 * @return the text with replaced tags
 	 */
-	@SafeVarargs
-	public static String getTextOfLanguage(final String language, final String key, final Pair<String, String>... tagAndReplacement)
+	public String getTextOfLanguage(final String language, final String key, final Pair<String, String>... tagAndReplacement)
 	{
 		checkLanguage(language);
 		String string = data.get(language).getProperty(key);
@@ -227,7 +235,7 @@ public class JKeel
 	/**
 	 * @return {@link #defaultLanguage}
 	 */
-	public static String getDefaultLanguage()
+	public String getDefaultLanguage()
 	{
 		return defaultLanguage;
 	}
@@ -239,7 +247,7 @@ public class JKeel
 	 *            the language to check
 	 * @return true if it is, false otherwise
 	 */
-	public static boolean isDefaultLanguage(final String language)
+	public boolean isDefaultLanguage(final String language)
 	{
 		if (Objects.isNull(language) || Objects.isNull(defaultLanguage))
 		{
@@ -256,7 +264,7 @@ public class JKeel
 	 * @throws LanguageNotFoundException
 	 *             if the language isn't loaded
 	 */
-	private static void checkLanguage(final String language)
+	private void checkLanguage(final String language)
 	{
 		if (Objects.isNull(data.get(language)))
 		{
@@ -271,7 +279,7 @@ public class JKeel
 	 *            the language to check for
 	 * @return true if it is loaded, false otherwise.
 	 */
-	public static boolean isLanguageLoaded(final String language)
+	public boolean isLanguageLoaded(final String language)
 	{
 		try
 		{
