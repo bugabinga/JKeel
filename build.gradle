@@ -2,10 +2,24 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.8
 
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
 dependencies {
     testCompile 'junit:junit:4.12'
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.14.1'
+}
+
+sourceSets {
+    main {
+        resources {
+            exclude '**/test/*'
+        }
+    }
 }

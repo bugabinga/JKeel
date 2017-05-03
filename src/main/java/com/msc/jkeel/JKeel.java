@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
-import javafx.util.Pair;
-
 public class JKeel
 {
 	private static JKeel globalInstance = new JKeel();
@@ -20,7 +18,7 @@ public class JKeel
 	/**
 	 * Returns JKeel's {@link #globalInstance global instance}.
 	 */
-	public JKeel global()
+	public static JKeel global()
 	{
 		return globalInstance;
 	}
@@ -178,7 +176,7 @@ public class JKeel
 		{
 			for (final String replacement : replacements)
 			{
-				string = string.replaceFirst("(\\(\\[.*\\]\\))", replacement);
+				string = string.replaceFirst("(\\(\\[.*?\\]\\))", replacement);
 			}
 		}
 		else if (!isDefaultLanguage(language))
@@ -200,7 +198,7 @@ public class JKeel
 	 *            tags that should be replaced including their replacementtext
 	 * @return the text with replaced tags
 	 */
-	public String getText(final String key, final Pair<String, String>... tagAndReplacement)
+	public String getText(final String key, final ReplacePair... tagAndReplacement)
 	{
 		return getTextOfLanguage(defaultLanguage, key, tagAndReplacement);
 	}
@@ -214,15 +212,15 @@ public class JKeel
 	 *            tags that should be replaced including their replacementtext
 	 * @return the text with replaced tags
 	 */
-	public String getTextOfLanguage(final String language, final String key, final Pair<String, String>... tagAndReplacement)
+	public String getTextOfLanguage(final String language, final String key, final ReplacePair... tagAndReplacement)
 	{
 		checkLanguage(language);
 		String string = data.get(language).getProperty(key);
 		if (Objects.nonNull(string))
 		{
-			for (final Pair<String, String> replacementPair : tagAndReplacement)
+			for (final ReplacePair replacementPair : tagAndReplacement)
 			{
-				string = string.replaceAll("(?i)(\\(\\[" + replacementPair.getKey() + "\\]\\))", replacementPair.getValue());
+				string = string.replaceAll("(?i)(\\(\\[" + replacementPair.getTag() + "?\\]\\))", replacementPair.getReplacement());
 			}
 		}
 		else if (!isDefaultLanguage(language))
