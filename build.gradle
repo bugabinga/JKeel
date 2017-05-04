@@ -2,10 +2,8 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.8
 
-allprojects {
-    repositories {
-        jcenter()
-    }
+repositories {
+    jcenter()
 }
 
 dependencies {
@@ -13,13 +11,5 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14.1'
-}
-
-sourceSets {
-    main {
-        resources {
-            exclude '**/test/*'
-        }
-    }
+    gradleVersion = '3.5'
 }
